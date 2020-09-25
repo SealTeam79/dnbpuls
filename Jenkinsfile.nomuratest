@@ -1,5 +1,3 @@
-oc)  1.56 KB
-  
 @Library('shared-lib')_
 pipFunc() {
     git 'https://snowdevops@github.com/SealTeam79/dnbpuls.git'
