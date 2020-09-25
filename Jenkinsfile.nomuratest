@@ -1,0 +1,40 @@
+oc)  1.56 KB
+  
+@Library('shared-lib')_
+pipFunc() {
+    git 'https://snowdevops@github.com/SealTeam79/dnbpuls.git'
+    def mvn_version = 'Maven'
+    stage('compile') {
+	      snDevOpsStep()
+        printBuildinfo {
+        	name = "Compiling..."
+        }
+        withEnv( ["PATH+MAVEN=${tool mvn_version}/bin"] ) {
+        	sh 'mvn clean install -DskipTests'
+		    }
+    }
+    stage('test') {
+	      snDevOpsStep()    
+        printBuildinfo {
+        	name = "Testing....."
+        }
+        withEnv( ["PATH+MAVEN=${tool mvn_version}/bin"] ) {
+        	sh 'mvn test -Dpublish'
+        }
+        junit '**/target/surefire-reports/*.xml'
+    }
+    stage('call deploy') {
+        snDevOpsStep ()
+        printBuildinfo {
+        	name = "About to deploy...."
+        }
+        deploy {
+           name = "deploy called...."
+        }
+    }
+    stage ('verify deploy') {
+        printBuildinfo {
+        	name = "Verifying deploy...."
+        }
+    }
+}
